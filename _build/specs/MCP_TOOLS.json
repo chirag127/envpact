@@ -1,0 +1,105 @@
+{
+  "tools": [
+    {
+      "name": "generate_env",
+      "description": "Generate a .env file for the current project by resolving secrets from the envpact vault. Reads .env.example, resolves shared.KEY references and per-environment objects, and writes .env atomically. Auto-detects project from git remote.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "description": "Project name override. Auto-detected from git remote if omitted."
+          },
+          "environment": {
+            "type": "string",
+            "description": "Environment to resolve (development/staging/production). Defaults to project._default_env or 'default'.",
+            "enum": ["development", "staging", "production", "default"]
+          },
+          "working_directory": {
+            "type": "string",
+            "description": "Path to the project directory containing .env.example. Defaults to cwd."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Output path for the .env file. Defaults to .env in working_directory.",
+            "default": ".env"
+          }
+        }
+      }
+    },
+    {
+      "name": "list_projects",
+      "description": "List all projects configured in the envpact secrets vault.",
+      "inputSchema": { "type": "object", "properties": {} }
+    },
+    {
+      "name": "list_shared",
+      "description": "List all shared secret names from the envpact vault. Values are NEVER returned — only names are listed for security.",
+      "inputSchema": { "type": "object", "properties": {} }
+    },
+    {
+      "name": "list_environments",
+      "description": "List all environments configured for a specific project (e.g., development, staging, production).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_name": { "type": "string" }
+        },
+        "required": ["project_name"]
+      }
+    },
+    {
+      "name": "add_secret",
+      "description": "Add or update a project-specific secret in the envpact vault. Use 'shared.KEY_NAME' as the value to reference a shared secret. Pass an environment to scope the secret to that environment only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_name": { "type": "string" },
+          "key": { "type": "string" },
+          "value": { "type": "string" },
+          "environment": {
+            "type": "string",
+            "description": "Optional. If set, the secret is stored as part of a per-environment object."
+          }
+        },
+        "required": ["project_name", "key", "value"]
+      }
+    },
+    {
+      "name": "add_shared_secret",
+      "description": "Add or update a shared secret. Shared secrets can be referenced by any project using 'shared.KEY_NAME' syntax.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "value": { "type": "string" }
+        },
+        "required": ["key", "value"]
+      }
+    },
+    {
+      "name": "rotate_secret",
+      "description": "Rotate a shared secret. Updates the value and returns the list of affected projects. Optionally syncs to GitHub Actions for all of them.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "new_value": { "type": "string" },
+          "sync_github": { "type": "boolean", "default": false }
+        },
+        "required": ["key", "new_value"]
+      }
+    },
+    {
+      "name": "sync_github",
+      "description": "Sync all resolved secrets for a project to GitHub Actions repository secrets via the gh CLI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_name": { "type": "string" },
+          "environment": { "type": "string" }
+        }
+      }
+    }
+  ]
+}

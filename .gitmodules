@@ -1,0 +1,18 @@
+[submodule "envpact-cli"]
+	path = envpact-cli
+	url = https://github.com/chirag127/envpact-cli.git
+[submodule "envpact-mcp"]
+	path = envpact-mcp
+	url = https://github.com/chirag127/envpact-mcp.git
+[submodule "envpact-python"]
+	path = envpact-python
+	url = https://github.com/chirag127/envpact-python.git
+[submodule "envpact-action"]
+	path = envpact-action
+	url = https://github.com/chirag127/envpact-action.git
+[submodule "envpact-vscode"]
+	path = envpact-vscode
+	url = https://github.com/chirag127/envpact-vscode.git
+[submodule "envpact-dashboard"]
+	path = envpact-dashboard
+	url = https://github.com/chirag127/envpact-dashboard.git

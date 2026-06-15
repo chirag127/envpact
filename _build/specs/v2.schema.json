@@ -1,0 +1,44 @@
+# JSON Schema for envpact secrets.json (v2)
+# Hosted at https://envpact.oriz.in/schema/v2.json
+# (mirror it from envpact-dashboard/public/schema/v2.json)
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://envpact.oriz.in/schema/v2.json",
+  "title": "envpact vault",
+  "type": "object",
+  "required": ["version", "shared", "projects"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "enum": [1, 2] },
+    "shared": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "projects": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "_default_env": { "type": "string" }
+        },
+        "additionalProperties": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          ]
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "owner":      { "type": "string" }
+      }
+    }
+  }
+}
