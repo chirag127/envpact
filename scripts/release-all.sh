@@ -46,11 +46,15 @@ bump_npm_pkg() {
 bump_pypi_pkg() {
   local dir="$1"
   ( cd "$dir"
-    python - <<'PY'
+    # Note: heredoc delimiter is UNQUOTED so $VERSION expands.
+    # If you change this to 'PY' (quoted), pyproject.toml will be
+    # written with the literal string $VERSION and PyPI publish
+    # will fail. (Found by audit agent — do not "simplify".)
+    python - <<PY
 import re, pathlib
 p = pathlib.Path('pyproject.toml')
 text = p.read_text()
-text = re.sub(r'^version\s*=\s*"[^"]+"', f'version = "$VERSION"', text, count=1, flags=re.M)
+text = re.sub(r'^version\s*=\s*"[^"]+"', 'version = "$VERSION"', text, count=1, flags=re.M)
 p.write_text(text)
 PY
   )
