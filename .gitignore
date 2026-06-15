@@ -1,0 +1,99 @@
+# envpact umbrella — gitignore
+# These patterns mirror .syncignore but apply to git, not OneDrive.
+
+# ─── Secrets ───────────────────────────────────────────────────
+# Plaintext .env files are NEVER committed. The single source of
+# truth is your private envpact-secrets vault repo, never this one.
+.env
+.env.*
+!.env.example
+.envrc
+*.key
+*.pem
+age.key
+secrets.json
+
+# ─── Node ──────────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+*.tgz
+.npm/
+.npmrc
+.pnpm-store/
+.yarn/
+package-lock.json.bak
+
+# ─── Python ────────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+**/.venv/
+venv/
+ENV/
+.pytest_cache/
+**/.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+*.egg
+.eggs/
+
+# ─── Build outputs ────────────────────────────────────────────
+# (NOTE: envpact-action commits its dist/ for action consumers —
+# that exception is enforced inside its own .gitignore, not here.)
+dist/
+build/
+out/
+.next/
+.astro/
+.wrangler/
+.parcel-cache/
+.turbo/
+.cache/
+.vscode-test/
+.vscode-test-web/
+*.vsix
+
+# ─── Build workspace (working clones; NOT submodules) ──────────
+# The 6 component repos are wired as submodules at the top level.
+# I keep working clones of each under _build/repos/ for in-tree
+# editing during this session — those should never be tracked
+# by the umbrella.
+_build/repos/
+
+# ─── OS / editor noise ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*.bak
+*~
+.idea/
+.vscode/
+
+# ─── Logs ──────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ─── Coverage / test artifacts ─────────────────────────────────
+coverage/
+**/coverage/
+.nyc_output/
+**/.nyc_output/
+
+# ─── envpact local state ───────────────────────────────────────
+# Just in case anyone copies their ~/.envpact/ into the repo by
+# mistake (it shouldn't be here at all, but defense-in-depth).
+.envpact/
