@@ -67,7 +67,9 @@ release_one() {
 
   echo
   echo "=== $component ==="
-  if [ ! -d "$dir/.git" ]; then
+  # In a submodule, .git is a FILE (gitdir pointer), not a directory.
+  # `git -C <dir> rev-parse` is the right detector.
+  if ! git -C "$dir" rev-parse --git-dir >/dev/null 2>&1; then
     echo "skip — not a git repo (submodule?)"
     return
   fi
