@@ -3,6 +3,9 @@
 [![CLI on npm](https://img.shields.io/npm/v/envpact-cli?label=envpact-cli)](https://www.npmjs.com/package/envpact-cli)
 [![MCP on npm](https://img.shields.io/npm/v/envpact-mcp?label=envpact-mcp)](https://www.npmjs.com/package/envpact-mcp)
 [![PyPI](https://img.shields.io/pypi/v/envpact?label=envpact%20%28Python%29)](https://pypi.org/project/envpact/)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/chirag127.envpact?label=VS%20Code)](https://marketplace.visualstudio.com/items?itemName=chirag127.envpact)
+[![Open VSX](https://img.shields.io/open-vsx/v/chirag127/envpact?label=Open%20VSX)](https://open-vsx.org/extension/chirag127/envpact)
+[![Smithery](https://smithery.ai/badge/envpact)](https://smithery.ai/server/envpact)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **A `$0`, serverless, Git-backed secrets manager for solo
@@ -19,20 +22,13 @@ the web dashboard.
 
 No SaaS subscription. No server to host. No project-count limit.
 
-> **⚠️ v0.1.0 release status:** as of 2026-06-15 the source code
-> is shipped, all CIs are green, but the package registries
-> (npm, PyPI, VS Code Marketplace) and the Cloudflare Pages
-> deployment have not yet been published. Until they are, install
-> from source:
->
-> ```bash
-> git clone https://github.com/chirag127/envpact-cli
-> cd envpact-cli && npm link
-> ```
->
-> See [TOKENS.md](./TOKENS.md) for the publish steps. Pin the
-> action as `chirag127/envpact-action@v0` (not `@v1`) until
-> v1.0.0 ships.
+> **v0.2.0 (2026-06-16)** — Every package is published. The high-severity
+> findings from the [v0.1.0 audit](./AUDIT.md) are resolved (private-vault
+> assertion, command-injection hardening, MCP path-traversal containment,
+> non-CLI ports refuse to leak `enc:` ciphertext). Two MAJOR items remain
+> open and are deferred to v0.3.0: cross-port resolver parity tests
+> (#7/#16) and vault-write file locking (#8). See AUDIT.md "Resolved in
+> v0.2.0" for the full disposition.
 
 ---
 
@@ -54,12 +50,12 @@ Solo developers face a unique secrets management dilemma:
 
 | Component | Repo | Install |
 | :--- | :--- | :--- |
-| **CLI** (Node) | [envpact-cli](./envpact-cli) | `npx envpact-cli` (after publish) |
-| **MCP server** | [envpact-mcp](./envpact-mcp) | Add `npx -y envpact-mcp` to your AI agent's MCP config |
-| **Python module** | [envpact-python](./envpact-python) | `pip install envpact` (after publish) |
+| **CLI** (Node) | [envpact-cli](./envpact-cli) | `npx envpact-cli` |
+| **MCP server** | [envpact-mcp](./envpact-mcp) | Add `npx -y envpact-mcp` to your AI agent's MCP config, or [install via Smithery](https://smithery.ai/server/envpact) |
+| **Python module** | [envpact-python](./envpact-python) | `pip install envpact` |
 | **GitHub Action** | [envpact-action](./envpact-action) | `chirag127/envpact-action@v0` |
-| **VS Code extension** | [envpact-vscode](./envpact-vscode) | `ext install chirag127.envpact` (after publish) |
-| **Web dashboard** | [envpact-dashboard](./envpact-dashboard) | https://envpact.oriz.in *(after DNS setup)* |
+| **VS Code extension** | [envpact-vscode](./envpact-vscode) | `ext install chirag127.envpact` (also on [Open VSX](https://open-vsx.org/extension/chirag127/envpact)) |
+| **Web dashboard** | [envpact-dashboard](./envpact-dashboard) | https://envpact.oriz.in |
 
 Every component reads & writes the **same vault**
 (`~/.envpact/secrets/secrets.json`) using the **same resolution
@@ -171,24 +167,22 @@ See [docs/security.md](./docs/security.md) for the full model.
 
 ---
 
-## Known limitations (v0.1.0)
+## Known limitations (v0.2.0)
 
-The [first audit](./AUDIT.md) of the v0.1.0 codebase surfaced a
-backlog of issues. The most important are tracked as GitHub
-issues; high-severity ones to know about today:
+The [v0.1.0 audit](./AUDIT.md) closed the seven highest-severity
+items in v0.2.0. Two MAJOR items remain open and are tracked
+against the **v0.3.0 milestone**:
 
-- **`--init auto` does not yet verify the existing repo is
-  private** — if you have a pre-existing public
-  `envpact-secrets` repo, the CLI will currently use it. Until
-  this is fixed (tracked at envpact-cli#TBD), manually verify
-  privacy before running `--init`.
-- **Encrypted (`enc:`) values are only decrypted by the CLI** —
-  the MCP server, Python, GitHub Action, VS Code extension, and
-  dashboard pass them through verbatim. Use plain values until
-  multi-port decryption lands.
-- Concurrent writes from CLI + MCP + dashboard can lose data
-  without file locking. Avoid running multiple writers at once.
-- See [AUDIT.md](./AUDIT.md) for the full list and severities.
+- **No cross-port resolver parity tests yet** (AUDIT #7 / #16).
+  Each of the 6 resolver ports has its own test suite, but a
+  shared canonical fixture set and per-port runner doesn't exist
+  yet — the most likely source of production drift bugs.
+- **Vault writes have no file locking** (AUDIT #8). Concurrent
+  writes from CLI + MCP + dashboard can lose data without retry.
+  Avoid running multiple writers at the same time until v0.3.0.
+
+See [AUDIT.md "Resolved in v0.2.0"](./AUDIT.md#resolved-in-v020-2026-06-16)
+for the full disposition table.
 
 ---
 

@@ -162,6 +162,50 @@ Code access.
 
 ---
 
+## Resolved in v0.2.0 (2026-06-16)
+
+A second multi-agent pass — fan-out across all 6 submodules,
+~1.5M agent tokens, ~7 min wall clock — closed the v0.2.0 milestone.
+Every fix is in the v0.2.0 release of its component.
+
+| # | Component | Status | Fix summary |
+| :--- | :--- | :--- | :--- |
+| 1 | envpact-cli | ✅ closed | `gh repo view --json` JSON parse; throw on `private !== true` with remediation; cmdInit catch tightened to `e.code === 'EEXISTS'` |
+| 1 | envpact-dashboard | ✅ closed | `getVaultRepo` throws on `data.private !== true`; renderDashboard surfaces the message |
+| 2 | envpact-cli | ✅ closed | `validateRepoSlug` (regex + leading-`-` rejection); `spawnSync` for view, `execFileSync` array form for create; no shell |
+| 3 | envpact-action | ✅ closed | `run({core, fs, fetchVault, setRepoSecret})` exported; `maskAll` runs strictly before `fs.writeFileSync`; ordering pinned by test |
+| 4 | envpact-mcp | ✅ closed | `PROJECT_NAME_REGEX`, `ENV_KEY_REGEX`, `ENVIRONMENT_REGEX` on Zod inputs; vault-layer `assertSafeKey` + `Object.defineProperty` writes |
+| 5 | envpact-mcp | ✅ closed | `path.resolve` + `path.relative` containment check on `output_path`; rejects `..`, absolute paths |
+| 6 | envpact-mcp / action / vscode / dashboard / python | ✅ closed (refusal) | All non-CLI ports now refuse to materialize `enc:*` values — surface a structured error pointing at envpact-cli instead of leaking ciphertext. Multi-port decryption is a future v0.3.0 scope item; refusal is the safe contract. |
+| 11 | envpact-cli | ✅ closed | `encryptValue` / `decryptValue` use buffer-mode end-to-end; trailing newlines preserved |
+| 13 | envpact-python | ✅ closed | `write_env_atomic` tmp suffix uses `os.getpid()` + `time.time_ns()` |
+| 15 | envpact-cli | ✅ closed | `parseArgs` allowlist; rejects `--rotate-secret` / unknown short flags / unknown `--key=value`; honours `--` end-of-options |
+| 21 | umbrella | ✅ closed (v0.1.0) | README populated |
+| 22 | umbrella | ✅ closed (v0.2.0) | README v0.2.0 refresh: install commands, badges, MCP-registry entries |
+
+### Deferred to v0.3.0
+
+These remain open and are documented as known limitations in the
+v0.2.0 release notes:
+
+| # | Component | Severity | Note |
+| :--- | :--- | :--- | :--- |
+| 7 / 16 | all 6 ports | MAJOR | Cross-port resolver parity test suite — needs a canonical fixture set in `_build/specs/` and a runner per port |
+| 8 | all 6 writers | MAJOR | File locking on vault writes; dashboard 409-refetch-replay |
+| 9 | all 6 ports | MEDIUM | `v1 → v2` upgrade idempotency tests |
+| 10 | all 6 ports | MEDIUM | Graceful fail-soft for v3+ schema (don't hard-throw on unknown versions) |
+| 14 | release-all.sh | MEDIUM | Add `GIT_TERMINAL_PROMPT=0` + 30s timeout to `git push --quiet` |
+| 17 | envpact-action | MEDIUM | Test that `core.setSecret` is called for the GitHub-secret-sync export path too |
+| 19 | envpact-mcp | MEDIUM | Negative tests for `tools/call` (missing required fields, stale vault) |
+| 20 | envpact-dashboard | MEDIUM | Add a test suite (currently zero) — OAuth polling, escapeHtml, GitHub Contents API client |
+| 24 | _build/specs/SHARED_SPEC.md | LOW | Spec edge cases: empty strings, arrays, nulls, `_default_env: ""`, `shared.` (empty key) |
+
+The v0.2.0 audit-fix workflow's full transcript lives at
+`.claude/projects/.../subagents/workflows/wf_61685253-8df/` for
+future review.
+
+---
+
 ## Re-running the audit
 
 ```bash
