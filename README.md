@@ -22,13 +22,19 @@ the web dashboard.
 
 No SaaS subscription. No server to host. No project-count limit.
 
-> **v0.2.0 (2026-06-16)** — Every package is published. The high-severity
+> **v0.2.0 (2026-06-18)** — Every package is published. The high-severity
 > findings from the [v0.1.0 audit](./AUDIT.md) are resolved (private-vault
 > assertion, command-injection hardening, MCP path-traversal containment,
 > non-CLI ports refuse to leak `enc:` ciphertext). Two MAJOR items remain
 > open and are deferred to v0.3.0: cross-port resolver parity tests
 > (#7/#16) and vault-write file locking (#8). See AUDIT.md "Resolved in
 > v0.2.0" for the full disposition.
+>
+> **Remote MCP is live** at https://mcp.envpact.oriz.in/mcp — Cloudflare
+> Worker variant of envpact-mcp using Streamable HTTP transport. See
+> [envpact-mcp/worker/README.md](./envpact-mcp/worker/README.md) for
+> architecture and [envpact-mcp/SMITHERY.md](./envpact-mcp/SMITHERY.md)
+> for the Smithery publish runbook.
 
 ---
 
@@ -51,7 +57,7 @@ Solo developers face a unique secrets management dilemma:
 | Component | Repo | Install |
 | :--- | :--- | :--- |
 | **CLI** (Node) | [envpact-cli](./envpact-cli) | `npx envpact-cli` |
-| **MCP server** | [envpact-mcp](./envpact-mcp) | Add `npx -y envpact-mcp` to your AI agent's MCP config, or [install via Smithery](https://smithery.ai/server/envpact) |
+| **MCP server** | [envpact-mcp](./envpact-mcp) | Add `npx -y envpact-mcp` to your AI agent's MCP config, or [install via Smithery](https://smithery.ai/server/envpact), or use the remote variant at https://mcp.envpact.oriz.in/mcp |
 | **Python module** | [envpact-python](./envpact-python) | `pip install envpact` |
 | **GitHub Action** | [envpact-action](./envpact-action) | `chirag127/envpact-action@v0` |
 | **VS Code extension** | [envpact-vscode](./envpact-vscode) | `ext install chirag127.envpact` (also on [Open VSX](https://open-vsx.org/extension/chirag127/envpact)) |
