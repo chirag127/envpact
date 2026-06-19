@@ -1,0 +1,27 @@
+title: envpact
+description: Centralized secrets manager for AI coding agents. Your secrets live in your own private GitHub repo; envpact reads them into project-scoped .env files, syncs them to AI agents over MCP, and rotates them across every project at once.
+url: "https://chirag127.github.io"
+baseurl: "/envpact"
+
+# GitHub Pages auto-discovers Markdown files; we just supply theme + meta.
+theme: jekyll-theme-minimal
+
+# Make the navbar list the per-component links explicitly so the umbrella
+# site is a one-stop reference even before users dig into individual repos.
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: false
+include:
+  - index.md
+  - architecture.md
+  - schema.md
+  - environments.md
+  - security.md
+
+# kramdown config for {: .btn} attribute lists used in index.md
+kramdown:
+  parse_block_html: true
