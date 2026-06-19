@@ -37,16 +37,20 @@ dim() { printf "\033[2m%s\033[0m\n" "$1"; }
 bold "==> Building envpact-mcp.mcpb"
 echo
 
-# Ensure devDeps for the build (esbuild + @anthropic-ai/mcpb).
-# `npm ci --ignore-scripts` keeps the install fast and avoids any
-# postinstall scripts on Windows that flake under OneDrive.
-if [ ! -d "$COMPONENT/node_modules/@anthropic-ai/mcpb" ] || [ ! -d "$COMPONENT/node_modules/esbuild" ]; then
-  bold "→ installing build deps (esbuild + @anthropic-ai/mcpb)"
-  ( cd "$COMPONENT" && npm ci --no-audit --no-fund --ignore-scripts )
+# Ensure devDeps for the build (esbuild + @anthropic-ai/mcpb +
+# fflate). pnpm respects the packageManager pin in package.json
+# and the allowBuilds list in pnpm-workspace.yaml — no explicit
+# --ignore-scripts is needed (pnpm only runs install scripts for
+# whitelisted deps by default).
+if [ ! -d "$COMPONENT/node_modules/@anthropic-ai/mcpb" ] \
+   || [ ! -d "$COMPONENT/node_modules/esbuild" ] \
+   || [ ! -d "$COMPONENT/node_modules/fflate" ]; then
+  bold "→ installing build deps (pnpm install)"
+  ( cd "$COMPONENT" && pnpm install --frozen-lockfile )
 fi
 
 # Run the canonical build.
-( cd "$COMPONENT" && node scripts/build-mcpb.js )
+( cd "$COMPONENT" && pnpm run build:mcpb )
 
 SRC="$COMPONENT/dist/envpact-mcp.mcpb"
 if [ ! -f "$SRC" ]; then
