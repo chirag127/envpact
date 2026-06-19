@@ -1,13 +1,22 @@
 # Tooling
 
-## Package manager: pnpm 11.8.0
+## Package manager: pnpm 10.18.0
 
 Every Node-based component in this monorepo uses **pnpm** (pinned
-to `11.8.0` via `packageManager` in each `package.json`). Locking
+to `10.18.0` via `packageManager` in each `package.json`). Locking
 to a specific version means dev machines and CI runners install
 the same content-addressable layout — no surprise hoisting
 differences between `npm` and `pnpm`, no "works for me" failures
 from stale lockfiles.
+
+### Why 10.18 specifically
+
+pnpm 11+ requires Node >=22.13 (it depends on `node:sqlite`, a
+Node 22 built-in). Several CI matrices include Node 18 and 20 to
+catch backwards-compat regressions; pnpm 11 crashes at startup on
+those runners with `ERR_UNKNOWN_BUILTIN_MODULE`. pnpm 10.18 is the
+latest 10.x: it supports Node ≥18.12 AND has the v10 settings
+schema (`allowBuilds` lives in `pnpm-workspace.yaml`).
 
 ### Why pnpm
 
@@ -69,7 +78,7 @@ Every workflow follows the same canonical install pattern:
 - name: Install pnpm
   uses: pnpm/action-setup@v4
   with:
-    version: 11.8.0
+    version: 10.18.0
     run_install: false
 
 - uses: actions/setup-node@v4
@@ -116,12 +125,28 @@ installs that miss everything still work; they're just slow.
 | Component | Build tool | Test runner |
 | :--- | :--- | :--- |
 | envpact-cli | (zero deps; node stdlib only) | node --test |
-| envpact-mcp | esbuild → mcpb pack | node --test |
+| envpact-mcp | esbuild → mcpb pack | scripts/test.mjs (Node native) |
 | envpact-mcp/worker | wrangler (Cloudflare) | (none yet — typecheck only) |
-| envpact-action | @vercel/ncc | node --test |
-| envpact-vscode | tsc → @vscode/vsce package | node --test --import tsx |
-| envpact-dashboard | astro build | node --test |
+| envpact-action | @vercel/ncc | scripts/test.mjs (Node native) |
+| envpact-vscode | tsc → @vscode/vsce package | scripts/test.mjs + tsx (auto) |
+| envpact-dashboard | astro build | node --test (no test files yet) |
 | envpact (Python) | hatchling | pytest |
+
+### About scripts/test.mjs
+
+pnpm scripts on Windows dispatch via `cmd.exe`, which does NOT
+expand POSIX globs. So `node --test tests/*.test.js` in package.json
+fails on Windows runners — the literal `tests\*.test.js` string
+reaches node, which can't open it as a file path. `scripts/test.mjs`
+solves this by walking `tests/` in Node itself and passing each
+matched file to a child `node --test` as an explicit arg.
+
+The same script auto-detects TypeScript test files and adds
+`--import tsx` when needed, so `envpact-vscode`'s `.ts` suite uses
+the same script as the JS-only repos.
+
+This is why every repo's `test` script is uniformly
+`node scripts/test.mjs`.
 
 ## Releasing
 
