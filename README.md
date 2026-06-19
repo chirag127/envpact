@@ -1,5 +1,7 @@
 # envpact
 
+> 📚 **Documentation:** [chirag127.github.io/envpact](https://chirag127.github.io/envpact/) · 🌐 **Live dashboard:** [envpact.oriz.in](https://envpact.oriz.in)
+
 [![CLI on npm](https://img.shields.io/npm/v/envpact-cli?label=envpact-cli)](https://www.npmjs.com/package/envpact-cli)
 [![MCP on npm](https://img.shields.io/npm/v/envpact-mcp?label=envpact-mcp)](https://www.npmjs.com/package/envpact-mcp)
 [![PyPI](https://img.shields.io/pypi/v/envpact?label=envpact%20%28Python%29)](https://pypi.org/project/envpact/)
