@@ -97,3 +97,6 @@ coverage/
 # Just in case anyone copies their ~/.envpact/ into the repo by
 # mistake (it shouldn't be here at all, but defense-in-depth).
 .envpact/
+
+# Claude Code session artifacts (worktrees, logs, etc.)
+.claude/
