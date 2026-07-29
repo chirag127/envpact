@@ -1,6 +1,6 @@
 # envpact
 
-> 📚 **Documentation:** [chirag127.github.io/envpact](https://chirag127.github.io/envpact/) · 🌐 **Live dashboard:** [envpact.oriz.in](https://envpact.oriz.in)
+> Live: [envpact.oriz.in](https://envpact.oriz.in)
 
 [![CLI on npm](https://img.shields.io/npm/v/envpact-cli?label=envpact-cli)](https://www.npmjs.com/package/envpact-cli)
 [![MCP on npm](https://img.shields.io/npm/v/envpact-mcp?label=envpact-mcp)](https://www.npmjs.com/package/envpact-mcp)
@@ -8,6 +8,7 @@
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/chirag127.envpact?label=VS%20Code)](https://marketplace.visualstudio.com/items?itemName=chirag127.envpact)
 [![Open VSX](https://img.shields.io/open-vsx/v/chirag127/envpact?label=Open%20VSX)](https://open-vsx.org/extension/chirag127/envpact)
 [![Smithery](https://smithery.ai/badge/envpact)](https://smithery.ai/server/envpact)
+[![GitHub Stars](https://img.shields.io/github/stars/chirag127/envpact?style=social)](https://github.com/chirag127/envpact)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **A `$0`, serverless, Git-backed secrets manager for solo
