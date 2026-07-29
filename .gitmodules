@@ -4,9 +4,6 @@
 [submodule "envpact-mcp"]
 	path = envpact-mcp
 	url = https://github.com/chirag127/envpact-mcp.git
-[submodule "envpact-python"]
-	path = envpact-python
-	url = https://github.com/chirag127/envpact-python.git
 [submodule "envpact-action"]
 	path = envpact-action
 	url = https://github.com/chirag127/envpact-action.git
